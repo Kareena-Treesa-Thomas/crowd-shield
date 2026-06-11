@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CrowdShield — Real-time Crowd Intelligence Dashboard. Live venue monitoring and safety alerts.">
+    <title>CrowdShield — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="index.html" class="sidebar-logo">CrowdShield</a>
+            <p class="sidebar-event-label">Demo Event</p>
+            <p class="sidebar-event-name">Mumbai Arena</p>
+            <div class="sidebar-clock" id="sidebar-clock">00:00:00</div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-link active" data-page="venue-map" id="nav-venue-map">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                    Live Venue Map
+                </div>
+                <div class="sidebar-link" data-page="alerts" id="nav-alerts">
+                    <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    Alerts
+                </div>
+                <div class="sidebar-link" data-page="analytics" id="nav-analytics">
+                    <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+                    Crowd Analytics
+                </div>
+                <div class="sidebar-link" data-page="thermal" id="nav-thermal">
+                    <svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+                    Thermal Monitor
+                </div>
+                <div class="sidebar-link" data-page="exit-routing" id="nav-exit-routing">
+                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                    Exit Routing
+                </div>
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="sidebar-meta-links">
+                    <span class="sidebar-meta-link">Settings</span>
+                    <span class="sidebar-meta-link">Support</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="dashboard-main">
+            <!-- Top Bar -->
+            <div class="dash-topbar">
+                <div class="dash-topbar-left">
+                    <span class="dash-topbar-title">Crowd Intelligence</span>
+                    <span class="dash-topbar-tag">CROWDSHIELD TERMINAL 1.0</span>
+                </div>
+                <div class="dash-topbar-right">
+                    <div class="dash-toggle" id="theme-toggle" title="Toggle theme"></div>
+                    <span class="dash-globe" title="Region">🌐</span>
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        <span>Live</span>
+                        <span class="live-time" id="topbar-time">00:00:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SUB-PAGE: VENUE MAP (Default) ===== -->
+            <div class="dash-subpage active" id="page-venue-map">
+                <div class="dash-heading-area">
+                    <h1 class="dash-heading">Mumbai Arena Live</h1>
+                    <p class="dash-subtitle">Real-time telemetry from 7 operational zones. Global occupancy threshold: <span class="highlight">80%</span></p>
+                </div>
+
+                <div class="dash-stats-row">
+                    <div class="dash-stat-card">
+                        <p class="dash-stat-label">TOTAL HEADCOUNT</p>
+                        <p class="dash-stat-value" id="total-headcount">14,282</p>
+                    </div>
+                    <div class="dash-stat-card">
+                        <p class="dash-stat-label">PEAK DENSITY</p>
+                        <p class="dash-stat-value" id="peak-density">92%</p>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="venue-legend">
+                    <span class="venue-legend-title">OPERATIONAL TOPOGRAPHY</span>
+                    <div class="legend-item"><span class="legend-dot safe"></span> Safe</div>
+                    <div class="legend-item"><span class="legend-dot caution"></span> Caution</div>
+                    <div class="legend-item"><span class="legend-dot critical"></span> Critical</div>
+                </div>
+
+                <!-- Venue Map Grid -->
+                <div class="venue-map-grid" id="venue-map-grid">
+                    <div class="zone-cell safe" data-zone="balcony-left">
+                        <span class="zone-cell-name">Balcony Left</span>
+                        <span class="zone-cell-pct" id="map-balcony-left">42%</span>
+                    </div>
+                    <div class="zone-cell critical" data-zone="stage-front">
+                        <span class="zone-cell-name">Stage Front</span>
+                        <span class="zone-cell-pct" id="map-stage-front">96%</span>
+                    </div>
+                    <div class="zone-cell safe" data-zone="balcony-right">
+                        <span class="zone-cell-name">Balcony Right</span>
+                        <span class="zone-cell-pct" id="map-balcony-right">38%</span>
+                    </div>
+                    <div class="zone-cell safe" data-zone="floor-left">
+                        <span class="zone-cell-name">Floor Left</span>
+                        <span class="zone-cell-pct" id="map-floor-left">64%</span>
+                    </div>
+                    <div class="zone-cell safe" data-zone="stage-rear">
+                        <span class="zone-cell-name">Stage Rear</span>
+                        <span class="zone-cell-pct" id="map-stage-rear">58%</span>
+                    </div>
+                    <div class="zone-cell caution" data-zone="floor-right">
+                        <span class="zone-cell-name">Floor Right</span>
+                        <span class="zone-cell-pct" id="map-floor-right">84%</span>
+                    </div>
+                    <div class="zone-cell caution full-width" data-zone="general-entry">
+                        <span class="zone-cell-name">General Entry</span>
+                        <span class="zone-cell-pct" id="map-general-entry">71%</span>
+                    </div>
+                </div>
+
+                <!-- Zone Detail Cards -->
+                <div class="zone-detail-grid" id="zone-detail-grid">
+                    <!-- Generated by JS -->
+                </div>
+
+                <!-- Bottom Panels -->
+                <div class="dash-bottom-panels">
+                    <div class="dash-panel">
+                        <h3 class="dash-panel-title">Active Heat Distribution</h3>
+                        <div class="heat-bar-item">
+                            <div class="heat-bar-header">
+                                <span class="heat-bar-name">Main Access Gate</span>
+                                <span class="heat-bar-value high" id="heat-main-gate">92%</span>
+                            </div>
+                            <div class="heat-bar-track"><div class="heat-bar-fill high" id="heat-fill-main" style="width:92%"></div></div>
+                            <p class="heat-bar-tag high">HIGH LOAD</p>
+                        </div>
+                        <div class="heat-bar-item">
+                            <div class="heat-bar-header">
+                                <span class="heat-bar-name">Arena North Concourse</span>
+                                <span class="heat-bar-value nominal" id="heat-north">45%</span>
+                            </div>
+                            <div class="heat-bar-track"><div class="heat-bar-fill nominal" id="heat-fill-north" style="width:45%"></div></div>
+                            <p class="heat-bar-tag nominal">NOMINAL</p>
+                        </div>
+                        <div class="heat-bar-item">
+                            <div class="heat-bar-header">
+                                <span class="heat-bar-name">VIP Lounge Corridor</span>
+                                <span class="heat-bar-value minimal" id="heat-vip">12%</span>
+                            </div>
+                            <div class="heat-bar-track"><div class="heat-bar-fill minimal" id="heat-fill-vip" style="width:12%"></div></div>
+                            <p class="heat-bar-tag minimal">MINIMAL</p>
+                        </div>
+                    </div>
+
+                    <div class="dash-panel">
+                        <h3 class="dash-panel-title">System Alerts <span class="alert-badge-count" id="dash-alert-badge">0</span> CRITICAL</h3>
+                        <div id="dash-alerts-container">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SUB-PAGE: ALERTS ===== -->
+            <div class="dash-subpage" id="page-alerts">
+                <div class="alerts-page-title">
+                    <h1 class="dash-heading">System Alerts</h1>
+                    <span class="alert-badge-count" id="alert-live-count">5</span>
+                </div>
+                <p class="alerts-summary">2 active critical alerts across 7 monitored zones.</p>
+
+                <div class="alert-filters">
+                    <button class="alert-filter-btn active" data-filter="all">All</button>
+                    <button class="alert-filter-btn" data-filter="active">Active</button>
+                    <button class="alert-filter-btn" data-filter="resolved">Resolved</button>
+                </div>
+
+                <div id="alerts-list">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- ===== SUB-PAGE: CROWD ANALYTICS ===== -->
+            <div class="dash-subpage" id="page-analytics">
+                <h1 class="dash-heading" style="margin-bottom:24px;">Crowd Analytics</h1>
+
+                <div class="analytics-metrics">
+                    <div class="analytics-metric-card">
+                        <p class="analytics-metric-label">MOST CROWDED ZONE</p>
+                        <p class="analytics-metric-value" style="color:var(--red);" id="analytics-crowded-zone">Stage Front</p>
+                        <p class="analytics-metric-sub" id="analytics-crowded-pct">96%</p>
+                    </div>
+                    <div class="analytics-metric-card">
+                        <p class="analytics-metric-label">PEAK TIME</p>
+                        <p class="analytics-metric-value">12:38 PM</p>
+                    </div>
+                    <div class="analytics-metric-card">
+                        <p class="analytics-metric-label">TOTAL HEADCOUNT</p>
+                        <p class="analytics-metric-value" id="analytics-headcount">14,282</p>
+                    </div>
+                </div>
+
+                <!-- Bar Chart -->
+                <div class="bar-chart-section">
+                    <h3 class="bar-chart-title">Zone Occupancy Overview</h3>
+                    <div id="bar-chart-container">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+
+                <!-- Crowd Flow Paths -->
+                <div class="flow-paths-section">
+                    <h3 class="flow-paths-title">Crowd Flow Paths</h3>
+                    <div class="flow-map">
+                        <span class="flow-zone-label" style="bottom:10px;left:50%;transform:translateX(-50%);">General Entry</span>
+                        <span class="flow-zone-label" style="top:10px;left:50%;transform:translateX(-50%);">Stage Front</span>
+                        <span class="flow-zone-label" style="top:50%;left:10px;transform:translateY(-50%);">Floor Left</span>
+                        <span class="flow-zone-label" style="top:50%;right:10px;transform:translateY(-50%);">Floor Right</span>
+                        <span class="flow-arrow" style="top:70%;left:48%;">↑</span>
+                        <span class="flow-arrow" style="top:55%;left:48%;animation-delay:0.3s;">↑</span>
+                        <span class="flow-arrow" style="top:40%;left:48%;animation-delay:0.6s;">↑</span>
+                        <span class="flow-arrow" style="top:25%;left:48%;animation-delay:0.9s;">↑</span>
+                        <span class="flow-arrow" style="top:60%;left:30%;transform:rotate(-30deg);animation-delay:0.4s;">↑</span>
+                        <span class="flow-arrow" style="top:60%;right:30%;transform:rotate(30deg);animation-delay:0.5s;">↑</span>
+                    </div>
+                </div>
+
+                <!-- Bottleneck Zones -->
+                <div class="bottleneck-section">
+                    <h3 class="bar-chart-title">Bottleneck Zones</h3>
+                    <div class="bottleneck-item">
+                        <div>
+                            <span class="bottleneck-zone">Stage Front</span>
+                            <span class="bottleneck-pct" id="bottleneck-sf">96%</span>
+                        </div>
+                        <span class="bottleneck-note">Immediate bottleneck. Redirection required.</span>
+                    </div>
+                    <div class="bottleneck-item">
+                        <div>
+                            <span class="bottleneck-zone">Floor Right</span>
+                            <span class="bottleneck-pct" id="bottleneck-fr" style="color:var(--amber);">84%</span>
+                        </div>
+                        <span class="bottleneck-note">Approaching critical. Monitor entry points.</span>
+                    </div>
+                </div>
+
+                <!-- Historical Comparison -->
+                <div class="chart-placeholder">
+                    <h3 class="chart-placeholder-title">Historical Comparison</h3>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="history-chart" width="800" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- ===== NEW REPORTS ===== -->
+
+                <!-- Report 1: Most Visited Zones -->
+                <div class="report-section">
+                    <div class="report-header">
+                        <h3 class="report-title">📍 Most Visited Zones</h3>
+                        <span class="report-tag">FOOTFALL ANALYSIS</span>
+                    </div>
+                    <p class="report-desc">Ranked by cumulative foot traffic over the current session. Higher dwell time and throughput zones appear first.</p>
+                    <div class="report-table" id="report-most-visited">
+                        <div class="report-table-header">
+                            <span class="report-col-rank">#</span>
+                            <span class="report-col-zone">Zone</span>
+                            <span class="report-col-value">Visitors</span>
+                            <span class="report-col-bar">Share</span>
+                            <span class="report-col-trend">Trend</span>
+                        </div>
+                        <!-- Rows generated by JS -->
+                    </div>
+                </div>
+
+                <!-- Report 2: Advertiser Exposure -->
+                <div class="report-section">
+                    <div class="report-header">
+                        <h3 class="report-title">📢 Advertiser Exposure Index</h3>
+                        <span class="report-tag">COMMERCIAL INSIGHT</span>
+                    </div>
+                    <p class="report-desc">Estimated impression potential based on zone dwell time × footfall. Advertisers placing signage in higher-ranked zones gain maximum visibility.</p>
+                    <div class="report-table" id="report-ad-exposure">
+                        <div class="report-table-header">
+                            <span class="report-col-rank">#</span>
+                            <span class="report-col-zone">Zone</span>
+                            <span class="report-col-value">Impressions</span>
+                            <span class="report-col-bar">Exposure</span>
+                            <span class="report-col-score">Score</span>
+                        </div>
+                        <!-- Rows generated by JS -->
+                    </div>
+                </div>
+
+                <!-- Report 3: Entry & Exit Usage -->
+                <div class="report-section">
+                    <div class="report-header">
+                        <h3 class="report-title">🚪 Entry & Exit Usage</h3>
+                        <span class="report-tag">ACCESS POINT ANALYSIS</span>
+                    </div>
+                    <p class="report-desc">Tracks throughput at all monitored entry and exit points. Identifies the most- and least-used access gates to optimise crowd flow and staffing.</p>
+                    <div class="entry-exit-grid" id="report-entry-exit">
+                        <!-- Cards generated by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ===== SUB-PAGE: THERMAL MONITOR ===== -->
+            <div class="dash-subpage" id="page-thermal">
+                <h1 class="dash-heading" style="margin-bottom:8px;">Thermal Monitor</h1>
+                <p class="thermal-subtitle">Simulated thermal feed across all operational zones. Updated every 3 seconds.</p>
+
+                <!-- Thermal Heatmap -->
+                <div class="thermal-heatmap" id="thermal-heatmap">
+                    <div class="thermal-zone" data-zone="balcony-left" style="background: linear-gradient(135deg, #1a4a7a, #2266aa);">
+                        <span class="thermal-zone-name">Balcony Left</span>
+                        <span class="thermal-zone-pct" id="th-balcony-left">42%</span>
+                    </div>
+                    <div class="thermal-zone" data-zone="stage-front" style="background: linear-gradient(135deg, #cc2200, #ff4422);">
+                        <span class="thermal-zone-name">Stage Front</span>
+                        <span class="thermal-zone-pct" id="th-stage-front">96%</span>
+                    </div>
+                    <div class="thermal-zone" data-zone="balcony-right" style="background: linear-gradient(135deg, #1a4a7a, #2266aa);">
+                        <span class="thermal-zone-name">Balcony Right</span>
+                        <span class="thermal-zone-pct" id="th-balcony-right">38%</span>
+                    </div>
+                    <div class="thermal-zone" data-zone="floor-left" style="background: linear-gradient(135deg, #2266aa, #cc8800);">
+                        <span class="thermal-zone-name">Floor Left</span>
+                        <span class="thermal-zone-pct" id="th-floor-left">64%</span>
+                    </div>
+                    <div class="thermal-zone" data-zone="stage-rear" style="background: linear-gradient(135deg, #2266aa, #cc8800);">
+                        <span class="thermal-zone-name">Stage Rear</span>
+                        <span class="thermal-zone-pct" id="th-stage-rear">58%</span>
+                    </div>
+                    <div class="thermal-zone" data-zone="floor-right" style="background: linear-gradient(135deg, #cc8800, #cc4400);">
+                        <span class="thermal-zone-name">Floor Right</span>
+                        <span class="thermal-zone-pct" id="th-floor-right">84%</span>
+                    </div>
+                    <div class="thermal-zone" data-zone="general-entry" style="grid-column: 1 / -1; background: linear-gradient(135deg, #cc8800, #cc4400);">
+                        <span class="thermal-zone-name">General Entry</span>
+                        <span class="thermal-zone-pct" id="th-general-entry">71%</span>
+                    </div>
+                </div>
+
+                <!-- Thermal Table -->
+                <div class="thermal-table-wrap">
+                    <table class="thermal-table">
+                        <thead>
+                            <tr>
+                                <th>Zone Name</th>
+                                <th>Simulated Temp</th>
+                                <th>Crowd Density</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="thermal-table-body">
+                            <tr><td>Stage Front</td><td id="tt-temp-sf">34.2°C</td><td id="tt-dens-sf">96%</td><td><span class="zone-badge critical">CRITICAL</span></td></tr>
+                            <tr><td>Floor Right</td><td id="tt-temp-fr">31.8°C</td><td id="tt-dens-fr">84%</td><td><span class="zone-badge caution">CAUTION</span></td></tr>
+                            <tr><td>General Entry</td><td id="tt-temp-ge">30.1°C</td><td id="tt-dens-ge">71%</td><td><span class="zone-badge caution">CAUTION</span></td></tr>
+                            <tr><td>Stage Rear</td><td id="tt-temp-sr">28.4°C</td><td id="tt-dens-sr">58%</td><td><span class="zone-badge safe">SAFE</span></td></tr>
+                            <tr><td>Floor Left</td><td id="tt-temp-fl">27.9°C</td><td id="tt-dens-fl">64%</td><td><span class="zone-badge safe">SAFE</span></td></tr>
+                            <tr><td>Balcony Left</td><td id="tt-temp-bl">25.1°C</td><td id="tt-dens-bl">42%</td><td><span class="zone-badge safe">SAFE</span></td></tr>
+                            <tr><td>Balcony Right</td><td id="tt-temp-br">24.6°C</td><td id="tt-dens-br">38%</td><td><span class="zone-badge safe">SAFE</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="thermal-note">Thermal feed is simulated for prototype demonstration purposes.</p>
+            </div>
+
+            <!-- ===== SUB-PAGE: EXIT ROUTING ===== -->
+            <div class="dash-subpage" id="page-exit-routing">
+                <h1 class="dash-heading" style="margin-bottom:8px;">Exit Routing</h1>
+                <p class="exit-subtitle">Live exit recommendations based on current zone density. Updated every 5 seconds.</p>
+
+                <!-- Exit Map -->
+                <div class="exit-map-container">
+                    <div class="exit-venue-outline">
+                        <!-- Zone labels inside -->
+                        <span class="flow-zone-label" style="top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);">VENUE FLOOR</span>
+
+                        <!-- Gate A - Left -->
+                        <div class="exit-gate" style="top:50%;left:-80px;transform:translateY(-50%);" id="gate-a">
+                            <span class="exit-gate-dot clear" id="gate-a-dot"></span>
+                            <span>Gate A</span>
+                            <span class="exit-gate-label clear" id="gate-a-label">CLEAR</span>
+                        </div>
+
+                        <!-- Gate B - Right -->
+                        <div class="exit-gate" style="top:50%;right:-110px;transform:translateY(-50%);" id="gate-b">
+                            <span class="exit-gate-dot congested" id="gate-b-dot"></span>
+                            <span>Gate B</span>
+                            <span class="exit-gate-label congested" id="gate-b-label">CONGESTED</span>
+                        </div>
+
+                        <!-- Gate C - Bottom Left -->
+                        <div class="exit-gate" style="bottom:-40px;left:15%;" id="gate-c">
+                            <span class="exit-gate-dot clear" id="gate-c-dot"></span>
+                            <span>Gate C</span>
+                            <span class="exit-gate-label clear" id="gate-c-label">CLEAR</span>
+                        </div>
+
+                        <!-- Gate D - Bottom Right -->
+                        <div class="exit-gate" style="bottom:-40px;right:15%;" id="gate-d">
+                            <span class="exit-gate-dot moderate" id="gate-d-dot"></span>
+                            <span>Gate D</span>
+                            <span class="exit-gate-label moderate" id="gate-d-label">MODERATE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendation -->
+                <div class="exit-recommendation">
+                    <h3 class="exit-recommendation-title">Recommendation</h3>
+                    <p class="exit-recommendation-text" id="exit-recommendation-text">Route Floor Left and Stage Front crowds toward Gate A and Gate C. Gate B is congested — avoid. Gate D is experiencing moderate load — use as secondary overflow only.</p>
+                </div>
+
+                <!-- Evacuation Protocol -->
+                <div class="evac-protocol">
+                    <h3 class="evac-title">Evacuation Protocol</h3>
+                    <div class="evac-step">
+                        <div class="evac-step-num">1</div>
+                        <p class="evac-step-text">Clear Stage Front via Gate A immediately.</p>
+                    </div>
+                    <div class="evac-step">
+                        <div class="evac-step-num">2</div>
+                        <p class="evac-step-text">Redirect General Entry arrivals to Gate C.</p>
+                    </div>
+                    <div class="evac-step">
+                        <div class="evac-step-num">3</div>
+                        <p class="evac-step-text">Hold Floor Right in place until Gate B congestion resolves.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

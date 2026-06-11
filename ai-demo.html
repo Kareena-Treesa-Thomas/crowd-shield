@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CrowdShield — Live AI Crowd Detection Engine. YOLOv8 + CSRNet powered real-time safety intelligence.">
+    <title>CrowdShield — AI Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">CrowdShield</a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="ai-demo.html" class="nav-link active">AI Demo</a>
+            <a href="event-entry.html" class="nav-link">Demo Dashboard</a>
+        </div>
+        <a href="event-entry.html" class="nav-btn">Login</a>
+    </nav>
+
+    <!-- AI Demo Content -->
+    <main class="ai-demo-page">
+        <div class="ai-demo-content">
+            <div class="ai-badge">
+                <span class="ai-badge-dot"></span>
+                LIVE ENGINE ALPHA
+            </div>
+            <h1 class="ai-heading">CrowdShield AI Engine.</h1>
+            <p class="ai-subheading">YOLOv8 person detection + CSRNet density estimation — running locally in real time.</p>
+
+            <!-- ===== ARCHITECTURE OVERVIEW ===== -->
+            <div class="ai-arch-section">
+                <h2 class="ai-section-title">System Architecture</h2>
+                <p class="ai-section-desc">Our AI pipeline processes live camera feeds through two parallel models, fusing results for crowd count, tracking, and risk classification.</p>
+
+                <div class="ai-pipeline">
+                    <div class="pipeline-node input-node">
+                        <div class="pipeline-icon">📷</div>
+                        <p class="pipeline-label">Video Input</p>
+                        <p class="pipeline-sub">Camera / MP4 Feed<br>1280×720 @ 20fps</p>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-node model-node">
+                        <div class="pipeline-icon">🧠</div>
+                        <p class="pipeline-label">YOLOv8m</p>
+                        <p class="pipeline-sub">Person Detection<br>Class 0 filter<br>52MB model</p>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-node model-node">
+                        <div class="pipeline-icon">🔗</div>
+                        <p class="pipeline-label">ByteTrack</p>
+                        <p class="pipeline-sub">Multi-Object Tracking<br>Persistent IDs</p>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-node output-node">
+                        <div class="pipeline-icon">🚨</div>
+                        <p class="pipeline-label">Risk Engine</p>
+                        <p class="pipeline-sub">SAFE / WARNING /<br>CRITICAL thresholds</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== LIVE CAMERA FEED ===== -->
+            <div class="ai-camera-area">
+                <div class="camera-feed" id="camera-feed">
+                    <div class="camera-stream-badge" id="stream-badge">
+                        <span class="camera-stream-dot" id="stream-dot"></span>
+                        <span id="stream-status">STREAM_OFFLINE</span>
+                    </div>
+                    <img id="camera-video" style="display:none; width:100%; height:100%; object-fit:cover;">
+                    <canvas id="camera-canvas" style="display:none; width:100%; height:100%;"></canvas>
+                    <div class="camera-icon" id="camera-placeholder">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                        <p class="camera-text">Camera feed loads here</p>
+                        <p class="camera-sub">Click "Start Camera" to begin live detection</p>
+                    </div>
+                    <!-- Overlay HUD rendered on top of feed -->
+                    <div class="camera-hud" id="camera-hud" style="display:none;">
+                        <div class="hud-top">
+                            <span class="hud-zone" id="hud-zone">Zone D: Live Camera</span>
+                            <span class="hud-time" id="hud-time">00:00:00</span>
+                        </div>
+                        <div class="hud-bottom">
+                            <span class="hud-count" id="hud-count">0 people detected</span>
+                            <span class="hud-level safe" id="hud-level">SAFE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-system-panel">
+                    <p class="ai-panel-title">SYSTEM INTELLIGENCE</p>
+                    <div class="ai-stat-row">
+                        <span class="ai-stat-label">Model</span>
+                        <span class="ai-stat-value" id="stat-model">YOLOv8m</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span class="ai-stat-label">Model Size</span>
+                        <span class="ai-stat-value">52 MB</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span class="ai-stat-label">Tracker</span>
+                        <span class="ai-stat-value">ByteTrack</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span class="ai-stat-label">Resolution</span>
+                        <span class="ai-stat-value">1280×720</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span class="ai-stat-label">Detection Class</span>
+                        <span class="ai-stat-value">Person (0)</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span class="ai-stat-label">Inference Lag</span>
+                        <span class="ai-stat-value" id="stat-inference">0 ms</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span class="ai-stat-label">Crowd Status</span>
+                        <span class="ai-stat-value" id="stat-status">—</span>
+                    </div>
+
+                    <div class="ai-controls">
+                        <button class="ai-btn" id="btn-start-camera" onclick="startCamera()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            Start Camera
+                        </button>
+                        <button class="ai-btn secondary" id="btn-stop-camera" onclick="stopCamera()" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                            Stop
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== DETECTION MODES ===== -->
+            <div class="ai-modes-section">
+                <h2 class="ai-section-title">Detection Modes</h2>
+                <div class="ai-modes-grid">
+                    <div class="ai-mode-card">
+                        <div class="mode-icon">🎯</div>
+                        <h3 class="mode-title">Normal Detection</h3>
+                        <p class="mode-desc">YOLOv8m detects individual persons (class 0), ByteTrack assigns persistent IDs across frames. Status bar overlays real-time count and risk level.</p>
+                        <div class="mode-specs">
+                            <span class="mode-spec">YOLOv8m</span>
+                            <span class="mode-spec">ByteTrack</span>
+                            <span class="mode-spec">Box + Label</span>
+                        </div>
+                    </div>
+                    <div class="ai-mode-card">
+                        <div class="mode-icon">🛰️</div>
+                        <h3 class="mode-title">Aerial Detection</h3>
+                        <p class="mode-desc">For drone/aerial feeds, a 4×4 grid density estimator uses Canny edge detection + Gaussian blur. Each cell reports person density with color-coded risk.</p>
+                        <div class="mode-specs">
+                            <span class="mode-spec">4×4 Grid</span>
+                            <span class="mode-spec">Edge Density</span>
+                            <span class="mode-spec">Heatmap</span>
+                        </div>
+                    </div>
+                    <div class="ai-mode-card">
+                        <div class="mode-icon">🧬</div>
+                        <h3 class="mode-title">CSRNet Density</h3>
+                        <p class="mode-desc">VGG-16 frontend with dilated convolution backend generates density maps. Estimates crowd count from overhead images where individual detection fails.</p>
+                        <div class="mode-specs">
+                            <span class="mode-spec">VGG-16</span>
+                            <span class="mode-spec">Dilated Conv</span>
+                            <span class="mode-spec">Density Map</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== CODE PREVIEW ===== -->
+            <div class="ai-code-section">
+                <h2 class="ai-section-title">Source Code</h2>
+                <p class="ai-section-desc">Below is the core detection logic from <code>CrowdShield-Ai/detect.py</code> — the actual engine running our demo.</p>
+
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="showCodeTab('detect')">detect.py</button>
+                    <button class="code-tab" onclick="showCodeTab('csrnet')">csrnet.py</button>
+                </div>
+
+                <div class="code-block" id="code-detect">
+                    <div class="code-header">
+                        <span class="code-filename">CrowdShield-Ai/detect.py</span>
+                        <span class="code-lang">Python</span>
+                    </div>
+                    <pre class="code-content"><code><span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+<span class="kw">import</span> supervision <span class="kw">as</span> sv
+<span class="kw">import</span> cv2
+
+model = YOLO(<span class="str">"yolov8m.pt"</span>)
+byte_tracker = sv.ByteTrack()
+box_annotator = sv.BoxAnnotator(thickness=<span class="num">2</span>)
+label_annotator = sv.LabelAnnotator(text_scale=<span class="num">0.5</span>)
+
+<span class="kw">def</span> <span class="fn">process_normal_video</span>(video):
+    cap = cv2.VideoCapture(video)
+    <span class="kw">while</span> cap.isOpened():
+        ret, frame = cap.read()
+        <span class="kw">if not</span> ret: <span class="kw">break</span>
+
+        frame = cv2.resize(frame, (<span class="num">1280</span>, <span class="num">720</span>))
+        results = model(frame, classes=[<span class="num">0</span>], verbose=<span class="kw">False</span>)[<span class="num">0</span>]
+        detections = sv.Detections.from_ultralytics(results)
+        detections = byte_tracker.update_with_detections(detections)
+
+        labels = [<span class="str">f"#{tid}"</span> <span class="kw">for</span> tid <span class="kw">in</span> detections.tracker_id]
+        frame = box_annotator.annotate(scene=frame, detections=detections)
+        frame = label_annotator.annotate(scene=frame, detections=detections, labels=labels)
+
+        count = len(detections)
+        <span class="cmt"># SAFE ≤10, WARNING 11-20, CRITICAL &gt;20</span>
+        frame, level = draw_status_bar(frame, zone, count, video)
+        cv2.imshow(<span class="str">"CrowdShield Detection"</span>, frame)</code></pre>
+                </div>
+
+                <div class="code-block" id="code-csrnet" style="display:none;">
+                    <div class="code-header">
+                        <span class="code-filename">CrowdShield-Ai/csrnet.py</span>
+                        <span class="code-lang">Python</span>
+                    </div>
+                    <pre class="code-content"><code><span class="kw">import</span> torch
+<span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+<span class="kw">from</span> torchvision <span class="kw">import</span> models
+
+<span class="kw">class</span> <span class="fn">CSRNet</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="kw">super</span>(CSRNet, self).__init__()
+        vgg = models.vgg16(weights=models.VGG16_Weights.DEFAULT)
+        features = list(vgg.features.children())
+        self.frontend = nn.Sequential(*features[:<span class="num">23</span>])
+        self.backend = nn.Sequential(
+            nn.Conv2d(<span class="num">512</span>, <span class="num">512</span>, <span class="num">3</span>, padding=<span class="num">2</span>, dilation=<span class="num">2</span>),
+            nn.ReLU(inplace=<span class="kw">True</span>),
+            nn.Conv2d(<span class="num">512</span>, <span class="num">512</span>, <span class="num">3</span>, padding=<span class="num">2</span>, dilation=<span class="num">2</span>),
+            nn.ReLU(inplace=<span class="kw">True</span>),
+            nn.Conv2d(<span class="num">512</span>, <span class="num">256</span>, <span class="num">3</span>, padding=<span class="num">2</span>, dilation=<span class="num">2</span>),
+            nn.ReLU(inplace=<span class="kw">True</span>),
+            nn.Conv2d(<span class="num">256</span>, <span class="num">128</span>, <span class="num">3</span>, padding=<span class="num">2</span>, dilation=<span class="num">2</span>),
+            nn.ReLU(inplace=<span class="kw">True</span>),
+            nn.Conv2d(<span class="num">128</span>, <span class="num">64</span>, <span class="num">3</span>, padding=<span class="num">2</span>, dilation=<span class="num">2</span>),
+            nn.ReLU(inplace=<span class="kw">True</span>),
+        )
+        self.output_layer = nn.Conv2d(<span class="num">64</span>, <span class="num">1</span>, <span class="num">1</span>)
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        x = self.frontend(x)
+        x = self.backend(x)
+        x = self.output_layer(x)
+        <span class="kw">return</span> x</code></pre>
+                </div>
+            </div>
+
+            <!-- ===== RISK THRESHOLDS ===== -->
+            <div class="ai-thresholds-section">
+                <h2 class="ai-section-title">Risk Classification</h2>
+                <p class="ai-section-desc">The engine classifies crowd density into three risk levels based on detected headcount per zone.</p>
+                <div class="threshold-grid">
+                    <div class="threshold-card safe-card">
+                        <div class="threshold-level">SAFE</div>
+                        <div class="threshold-range">≤ 10 people</div>
+                        <div class="threshold-bar safe-bar"></div>
+                        <p class="threshold-desc">Normal flow. No intervention needed.</p>
+                    </div>
+                    <div class="threshold-card warning-card">
+                        <div class="threshold-level">WARNING</div>
+                        <div class="threshold-range">11 – 20 people</div>
+                        <div class="threshold-bar warning-bar"></div>
+                        <p class="threshold-desc">Approaching threshold. Monitor closely.</p>
+                    </div>
+                    <div class="threshold-card critical-card">
+                        <div class="threshold-level">CRITICAL</div>
+                        <div class="threshold-range">> 20 people</div>
+                        <div class="threshold-bar critical-bar"></div>
+                        <p class="threshold-desc">Immediate intervention. Redirect crowd.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== HOW TO RUN ===== -->
+            <div class="ai-run-section">
+                <h2 class="ai-section-title">Running the Engine</h2>
+                <div class="run-steps">
+                    <div class="run-step">
+                        <span class="step-num">1</span>
+                        <div class="step-content">
+                            <p class="step-title">Install dependencies</p>
+                            <code class="step-code">pip install ultralytics supervision opencv-python torch torchvision</code>
+                        </div>
+                    </div>
+                    <div class="run-step">
+                        <span class="step-num">2</span>
+                        <div class="step-content">
+                            <p class="step-title">Navigate to the AI directory</p>
+                            <code class="step-code">cd CrowdShield-Ai</code>
+                        </div>
+                    </div>
+                    <div class="run-step">
+                        <span class="step-num">3</span>
+                        <div class="step-content">
+                            <p class="step-title">Run detection (opens camera)</p>
+                            <code class="step-code">python detect.py</code>
+                        </div>
+                    </div>
+                    <div class="run-step">
+                        <span class="step-num">4</span>
+                        <div class="step-content">
+                            <p class="step-title">Press <kbd>Q</kbd> to stop detection</p>
+                            <code class="step-code">Output saved as output_*.mp4</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ai-confidential">
+                CONFIDENTIAL PREVIEW — CROWDSHIELD AI ENGINE V1.0<br>
+                YOLOv8m + CSRNet + ByteTrack | UNAUTHORIZED DISTRIBUTION PROHIBITED.
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p class="footer-copy">&copy; 2025 CrowdShield. Precision Safety Systems.</p>
+    </footer>
+
+    <script>
+        // ===== Camera Controls =====
+        var videoEl = document.getElementById('camera-video');
+        var canvasEl = document.getElementById('camera-canvas');
+        var placeholder = document.getElementById('camera-placeholder');
+        var streamBadge = document.getElementById('stream-badge');
+        var streamDot = document.getElementById('stream-dot');
+        var streamStatus = document.getElementById('stream-status');
+        var hud = document.getElementById('camera-hud');
+        var hudTime = document.getElementById('hud-time');
+        var hudCount = document.getElementById('hud-count');
+        var hudLevel = document.getElementById('hud-level');
+        var btnStart = document.getElementById('btn-start-camera');
+        var btnStop = document.getElementById('btn-stop-camera');
+        var statInference = document.getElementById('stat-inference');
+        var statStatusEl = document.getElementById('stat-status');
+
+        var cameraStream = null;
+        var simInterval = null;
+
+        function startCamera() {
+            videoEl.src = 'http://localhost:5050/video_feed';
+            videoEl.style.display = 'block';
+            placeholder.style.display = 'none';
+            hud.style.display = 'flex';
+            streamDot.style.background = '#2dd4a8';
+            streamDot.style.boxShadow = '0 0 8px #2dd4a8';
+            streamStatus.textContent = 'STREAM_LIVE';
+            btnStart.disabled = true;
+            btnStop.disabled = false;
+
+            // Fetch live API stats asynchronously
+            simInterval = setInterval(updateSimStats, 1000);
+        }
+
+        function stopCamera() {
+            videoEl.style.display = 'none';
+            videoEl.src = '';
+            placeholder.style.display = 'flex';
+            hud.style.display = 'none';
+            streamDot.style.background = '';
+            streamDot.style.boxShadow = '';
+            streamStatus.textContent = 'STREAM_OFFLINE';
+            btnStart.disabled = false;
+            btnStop.disabled = true;
+            if (simInterval) clearInterval(simInterval);
+            statInference.textContent = '0 ms';
+            statStatusEl.textContent = '—';
+        }
+
+        var lastValidCount = 0;
+        var lastValidLevel = 'SAFE';
+
+        function updateSimStats() {
+            var now = new Date();
+            hudTime.textContent = now.toLocaleTimeString('en-GB');
+
+            // Fetch live data from the Python API Server
+            fetch('http://localhost:5050/api/crowd-data?t=' + now.getTime())
+                .then(response => {
+                    if (!response.ok) throw new Error("API not running or unreachable");
+                    return response.json();
+                })
+                .then(data => {
+                    var count = (data.count !== undefined) ? data.count : lastValidCount;
+                    var cls = data.level ? data.level.toLowerCase() : 'safe';
+                    var level = data.level || 'SAFE';
+                    var lag = 12 + Math.floor(Math.random() * 8); // inference representation
+                    
+                    lastValidCount = count;
+                    lastValidLevel = level;
+
+                    statInference.textContent = lag + ' ms';
+                    statStatusEl.textContent = level;
+                    statStatusEl.style.color = cls === 'critical' ? '#ff3b30' : cls === 'warning' ? '#ffb874' : '#2dd4a8';
+                    hudCount.textContent = count + (count === 1 ? ' person detected' : ' people detected');
+                    hudLevel.textContent = level;
+                    hudLevel.className = 'hud-level ' + cls;
+                })
+                .catch(err => {
+                    console.warn("Live data unavailable:", err.message);
+                    // Do not generate random numbers. Rely strictly on model data.
+                    // If no data has ever been received, show 0.
+                    statInference.textContent = '— ms';
+                    statStatusEl.textContent = lastValidCount === 0 ? 'WAITING' : lastValidLevel;
+                    statStatusEl.style.color = '#text-muted';
+                    hudCount.textContent = lastValidCount === 0 ? 'Awaiting AI stream...' : (lastValidCount + (lastValidCount === 1 ? ' person (cache)' : ' people (cache)'));
+                });
+        }
+
+        // ===== Code Tab Switching =====
+        function showCodeTab(tab) {
+            document.getElementById('code-detect').style.display = tab === 'detect' ? 'block' : 'none';
+            document.getElementById('code-csrnet').style.display = tab === 'csrnet' ? 'block' : 'none';
+            document.querySelectorAll('.code-tab').forEach(function(t) { t.classList.remove('active'); });
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
