@@ -1,0 +1,16 @@
+*.pt
+*.pth
+*.onnx
+
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+.env
+
+output_*.mp4
+*.log
+
+.DS_Store
+Thumbs.db

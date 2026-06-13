@@ -1,5 +1,4 @@
-
-  """
+"""
 CrowdShield AI - Detection Engine
 Optimizations:
   - YOLOv8n (nano) instead of YOLOv8m -> ~4x faster

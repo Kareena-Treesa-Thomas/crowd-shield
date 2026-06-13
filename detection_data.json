@@ -1,5 +1,6 @@
 {
-    "count": 16,
-    "level": "WARNING",
-    "timestamp": "2026-04-13T13:45:00.000Z"
+  "count": 16,
+  "level": "WARNING",
+  "fps": 12.5,
+  "timestamp": "2026-06-13T12:00:00.000Z"
 }
