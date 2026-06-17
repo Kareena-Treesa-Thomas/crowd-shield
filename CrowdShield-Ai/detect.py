@@ -1,4 +1,3 @@
-
 """
 CrowdShield AI - Detection Engine
 Optimizations:
@@ -26,7 +25,7 @@ model.to(DEVICE)
 if DEVICE == "cuda":
     model.model.half()
 
-byte_tracker = sv.ByteTrack()
+byte_tracker = sv.ByteTrack(minimum_matching_threshold=0.8)
 box_annotator = sv.BoxAnnotator(thickness=1)
 label_annotator = sv.LabelAnnotator(text_scale=0.4)
 
@@ -71,7 +70,7 @@ class CrowdDetector:
     def detect(self, frame):
         self._frame_count += 1
 
-        if self._frame_count % 2 == 0:
+        if self._frame_count % 2 != 0:
             frame = cv2.resize(frame, (640, 480))
             results = model(frame, classes=[0], verbose=False, stream=True)
 
@@ -85,10 +84,6 @@ class CrowdDetector:
             self._last_level = classify(self._last_count)
         else:
             frame = cv2.resize(frame, (640, 480))
-            # Preserve the most recent tracked detections on skipped frames so
-            # ByteTrack IDs remain visible instead of clearing them with an empty update.
-            # If the tracker library supports prediction, that should be added here.
-            self._last_detections = self._last_detections
 
         tracker_ids = self._last_detections.tracker_id
         labels = [f"#{tid}" for tid in tracker_ids] if tracker_ids is not None and tracker_ids.size > 0 else []
