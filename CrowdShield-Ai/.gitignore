@@ -14,3 +14,4 @@ output_*.mp4
 
 .DS_Store
 Thumbs.db
+alerts.json

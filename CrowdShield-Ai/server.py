@@ -9,22 +9,24 @@ from flask_cors import CORS
 import cv2
 import threading
 import time
-from detect import CrowdDetector
+from detect import CrowdDetector, DEVICE, MODEL_PATH, LEVEL_RULES
+from zones import get_zone
+from alert_logger import log_alert, load_alerts, resolve_alert
 
 app = Flask(__name__)
 CORS(app)
 
-detector = CrowdDetector()
+zone = get_zone()
+detector = CrowdDetector(zone=zone["name"])
 latest_data = {"count": 0, "level": "SAFE", "fps": 0}
 lock = threading.Lock()
-
-cap = None
 running = False
+cap = None
 
 
 def gen_frames():
     global cap, running, latest_data
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(zone["camera_source"])
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     running = True
@@ -37,8 +39,17 @@ def gen_frames():
         t0 = time.time()
         frame, count, level = detector.detect(frame)
         fps = round(1 / (time.time() - t0 + 1e-6), 1)
+
         with lock:
-        latest_data = {"count": count, "level": level, "fps": fps}
+            latest_data = {"count": count, "level": level, "fps": fps}
+
+        if level in ("WARNING", "CRITICAL"):
+            log_alert(
+                zone_id=zone["id"],
+                zone_name=zone["name"],
+                count=count,
+                level=level
+            )
 
         ret2, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
         if not ret2:
@@ -60,6 +71,28 @@ def crowd_data():
         return jsonify(latest_data)
 
 
+@app.route('/api/health')
+def health():
+    return jsonify({
+        "status": "ok",
+        "zone": zone["name"],
+        "device": DEVICE,
+        "model": MODEL_PATH,
+        "levels": LEVEL_RULES,
+    })
+
+
+@app.route('/api/alerts')
+def get_alerts():
+    return jsonify(load_alerts())
+
+
+@app.route('/api/alerts/<int:alert_id>/resolve', methods=['POST'])
+def resolve(alert_id):
+    resolve_alert(alert_id)
+    return jsonify({"status": "resolved", "alert_id": alert_id})
+
+
 @app.route('/stop')
 def stop():
     global running
@@ -68,5 +101,6 @@ def stop():
 
 
 if __name__ == '__main__':
-    print("CrowdShield AI Server running at http://localhost:5050")
+    print(f"CrowdShield AI Server running at http://localhost:5050")
+    print(f"Zone: {zone['name']} | Camera: {zone['camera_source']} | Device: {DEVICE}")
     app.run(host='0.0.0.0', port=5050, threaded=True)

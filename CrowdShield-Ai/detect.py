@@ -13,6 +13,10 @@ import supervision as sv
 import cv2
 import torch
 import time
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 MODEL_PATH = "yolov8n.pt"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -26,13 +30,36 @@ byte_tracker = sv.ByteTrack()
 box_annotator = sv.BoxAnnotator(thickness=1)
 label_annotator = sv.LabelAnnotator(text_scale=0.4)
 
-SAFE_LIMIT = 10
-WARNING_LIMIT = 20
+SAFE_LIMIT = int(os.getenv("SAFE_LIMIT", 10))
+WARNING_LIMIT = int(os.getenv("WARNING_LIMIT", 20))
 
 STATUS_COLORS = {
     "SAFE": (45, 212, 168),
     "WARNING": (255, 184, 116),
     "CRITICAL": (255, 59, 48),
+}
+
+# Machine-readable level rules used by the server/UI. Keep in sync with
+# `SAFE_LIMIT` and `WARNING_LIMIT` or rely on environment variables.
+LEVEL_RULES = {
+    "SAFE": {
+        "min": 0,
+        "max": SAFE_LIMIT,
+        "emoji": "🟢",
+        "description": "Normal occupancy — no action needed",
+    },
+    "WARNING": {
+        "min": SAFE_LIMIT + 1,
+        "max": WARNING_LIMIT,
+        "emoji": "🟡",
+        "description": "Elevated density — monitor closely",
+    },
+    "CRITICAL": {
+        "min": WARNING_LIMIT + 1,
+        "max": None,
+        "emoji": "🔴",
+        "description": "High risk — immediate intervention recommended",
+    },
 }
 
 
@@ -81,6 +108,13 @@ class CrowdDetector:
             self._last_level = classify(self._last_count)
         else:
             frame = cv2.resize(frame, (640, 480))
+            # Preserve the previous detections/tracker IDs on skipped frames.
+            # Calling `update_with_detections` with an empty Detections object
+            # can clear tracker state and remove tracker IDs. Instead, keep
+            # `self._last_detections` unchanged so labels retain tracker IDs
+            # between detection frames. If needed, consider calling a
+            # tracker prediction method here to advance tracks.
+            # (No update call here.)
 
         tracker_ids = self._last_detections.tracker_id
         labels = [f"#{tid}" for tid in tracker_ids] if tracker_ids is not None and tracker_ids.size > 0 else []

@@ -7,3 +7,4 @@ torch
 torchvision
 Pillow
 numpy
+python-dotenv>=1.0.0
