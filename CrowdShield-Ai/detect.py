@@ -97,9 +97,6 @@ def process_video(source=0, zone="Zone A"):
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(f"output_{zone.replace(' ', '_')}.mp4", fourcc, 20, (640, 480))
-
     print(f"[CrowdShield] Running on {DEVICE.upper()} | Model: {MODEL_PATH}")
     print("Press Q to quit.")
 
@@ -115,13 +112,11 @@ def process_video(source=0, zone="Zone A"):
         cv2.putText(frame, f"FPS: {fps}", (10, 22),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 2)
 
-        out.write(frame)
         cv2.imshow("CrowdShield Detection", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     cap.release()
-    out.release()
     cv2.destroyAllWindows()
     print("[CrowdShield] Stopped.")
 
