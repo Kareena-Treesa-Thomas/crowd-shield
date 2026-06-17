@@ -39,29 +39,6 @@ STATUS_COLORS = {
     "CRITICAL": (255, 59, 48),
 }
 
-# Machine-readable level rules used by the server/UI. Keep in sync with
-# `SAFE_LIMIT` and `WARNING_LIMIT` or rely on environment variables.
-LEVEL_RULES = {
-    "SAFE": {
-        "min": 0,
-        "max": SAFE_LIMIT,
-        "emoji": "🟢",
-        "description": "Normal occupancy — no action needed",
-    },
-    "WARNING": {
-        "min": SAFE_LIMIT + 1,
-        "max": WARNING_LIMIT,
-        "emoji": "🟡",
-        "description": "Elevated density — monitor closely",
-    },
-    "CRITICAL": {
-        "min": WARNING_LIMIT + 1,
-        "max": None,
-        "emoji": "🔴",
-        "description": "High risk — immediate intervention recommended",
-    },
-}
-
 
 def classify(count: int) -> str:
     if count <= SAFE_LIMIT:
@@ -108,13 +85,10 @@ class CrowdDetector:
             self._last_level = classify(self._last_count)
         else:
             frame = cv2.resize(frame, (640, 480))
-            # Preserve the previous detections/tracker IDs on skipped frames.
-            # Calling `update_with_detections` with an empty Detections object
-            # can clear tracker state and remove tracker IDs. Instead, keep
-            # `self._last_detections` unchanged so labels retain tracker IDs
-            # between detection frames. If needed, consider calling a
-            # tracker prediction method here to advance tracks.
-            # (No update call here.)
+            # Preserve the most recent tracked detections on skipped frames so
+            # ByteTrack IDs remain visible instead of clearing them with an empty update.
+            # If the tracker library supports prediction, that should be added here.
+            self._last_detections = self._last_detections
 
         tracker_ids = self._last_detections.tracker_id
         labels = [f"#{tid}" for tid in tracker_ids] if tracker_ids is not None and tracker_ids.size > 0 else []

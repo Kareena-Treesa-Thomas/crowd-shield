@@ -1,4 +1,4 @@
-"""
+﻿"""
 CrowdShield AI - Flask Backend Server
 Serves /video_feed (MJPEG stream) and /api/crowd-data (JSON)
 Run: python server.py
@@ -9,7 +9,7 @@ from flask_cors import CORS
 import cv2
 import threading
 import time
-from detect import CrowdDetector, DEVICE, MODEL_PATH, LEVEL_RULES
+from detect import CrowdDetector, DEVICE, MODEL_PATH
 from zones import get_zone
 from alert_logger import log_alert, load_alerts, resolve_alert
 
@@ -77,8 +77,7 @@ def health():
         "status": "ok",
         "zone": zone["name"],
         "device": DEVICE,
-        "model": MODEL_PATH,
-        "levels": LEVEL_RULES,
+        "model": MODEL_PATH
     })
 
 
