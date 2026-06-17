@@ -28,21 +28,17 @@ def gen_frames():
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     running = True
-    frame_count = 0
 
     while running:
         ret, frame = cap.read()
         if not ret:
             break
 
-        frame_count += 1
         t0 = time.time()
-
-        if frame_count % 2 == 0:
-            frame, count, level = detector.detect(frame)
-            fps = round(1 / (time.time() - t0 + 1e-6), 1)
-            with lock:
-                latest_data = {"count": count, "level": level, "fps": fps}
+        frame, count, level = detector.detect(frame)
+        fps = round(1 / (time.time() - t0 + 1e-6), 1)
+        with lock:
+        latest_data = {"count": count, "level": level, "fps": fps}
 
         ret2, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
         if not ret2:

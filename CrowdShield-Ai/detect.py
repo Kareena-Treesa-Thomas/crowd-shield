@@ -1,5 +1,5 @@
 
-  """
+"""
 CrowdShield AI - Detection Engine
 Optimizations:
   - YOLOv8n (nano) instead of YOLOv8m -> ~4x faster
@@ -82,7 +82,8 @@ class CrowdDetector:
         else:
             frame = cv2.resize(frame, (640, 480))
 
-        labels = [f"#{tid}" for tid in (self._last_detections.tracker_id or [])]
+        tracker_ids = self._last_detections.tracker_id
+        labels = [f"#{tid}" for tid in tracker_ids] if tracker_ids is not None and tracker_ids.size > 0 else []
         frame = box_annotator.annotate(scene=frame, detections=self._last_detections)
         frame = label_annotator.annotate(scene=frame, detections=self._last_detections, labels=labels)
         frame = draw_status_bar(frame, self.zone, self._last_count, self._last_level)
