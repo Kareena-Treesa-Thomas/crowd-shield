@@ -244,9 +244,6 @@ All tests passed.
 
 ## 👥 Team
 
-Built at **Muthoot Institute of Technology and Science (MITS), Kochi**
-Under the guidance of **Dr. Roy C.J.**
-
 | Name | Role |
 |---|---|
 | **Kareena Treesa Thomas** | Project Lead · AI Backend · Detection Pipeline |
@@ -259,7 +256,7 @@ Under the guidance of **Dr. Roy C.J.**
 ## 🔗 Links
 
 - **Repository:** [github.com/Kareena-Treesa-Thomas/crowd-shield](https://github.com/Kareena-Treesa-Thomas/crowd-shield)
-- **Live Demo:** Coming soon
+- **Live Demo:** https://crowd-shield-delta.vercel.app/
 
 ---
 
