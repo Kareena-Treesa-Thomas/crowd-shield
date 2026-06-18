@@ -1,4 +1,4 @@
-﻿"""
+"""
 CrowdShield AI - Flask Backend Server
 Serves /video_feed (MJPEG stream) and /api/crowd-data (JSON)
 Run: python server.py
