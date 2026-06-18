@@ -1,84 +1,79 @@
 ﻿<div align="center">
 
-# 🛡️ CrowdShield
+<img src="https://img.shields.io/badge/CrowdShield-AI%20Crowd%20Safety-red?style=for-the-badge&logo=shield&logoColor=white" alt="CrowdShield" height="40"/>
 
-> Real-time crowd intelligence that turns density data into early warnings — before a crowd becomes a crisis.
+### Real-time crowd intelligence that turns density data into early warnings — before a crowd becomes a crisis.
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
-![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=flat-square&logo=opencv&logoColor=white)](https://opencv.org)
+[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org)
+[![YOLOv8](https://img.shields.io/badge/YOLOv8-00FFFF?style=flat-square&logoColor=black)](https://ultralytics.com)
 
 </div>
 
 ---
 
-## 📖 Overview
+## 🔴 The Problem
 
-**CrowdShield** is a real-time crowd safety and intelligence platform built to help event organizers, venue operators, religious site authorities, and public safety teams **detect, monitor, and respond to dangerous crowd densities before they escalate into stampedes or crush incidents**.
+Crowd disasters don't happen because events are unmanaged. They happen at **organized, staffed, fully monitored gatherings** — where the missing ingredient is real-time visibility into crowd behavior:
 
-### The Problem
+| Incident | Deaths | Setting |
+|---|---|---|
+| Hillsborough, UK (1989) | 97 | Football stadium with full police presence |
+| Hajj Tunnel Tragedy (1990) | 1,426 | Managed religious pilgrimage |
+| Love Parade, Germany (2010) | 21 | Licensed music festival |
+| Kumbh Mela (2013) | 36+ | Extensive crowd management plans in place |
+| Astroworld Festival (2021) | 10 | Fully ticketed, professionally staffed concert |
+| Hathras, India (2024) | 121 | Religious congregation with designated organizers |
 
-Crowd disasters are rarely the result of chaos at unmanaged events — they overwhelmingly occur at **organized gatherings where management, security personnel, and infrastructure are already in place**:
-
-| Incident | Year | Deaths | Context |
-|---|---|---|---|
-| Hillsborough Stadium | 1989 | 97 | Full police presence, managed stadium |
-| Hajj Tunnel, Mecca | 1990 | 1,426 | Organized pilgrimage with designated routes |
-| Love Parade, Germany | 2010 | 21 | Licensed music festival |
-| Kumbh Mela | 2013 | 36+ | Extensive crowd management plans in place |
-| Astroworld Festival | 2021 | 10 | Fully ticketed, professionally staffed concert |
-| Hathras, India | 2024 | 121 | Religious congregation with designated organizers |
-
-In every case, organizers and authorities were present. What was missing was **real-time, data-driven visibility into how the crowd was actually behaving** — and a structured system to act on that information before conditions became fatal.
-
-### The Solution
-
-CrowdShield closes this gap by combining three layers into a single deployable system:
-
-1. **AI Detection Layer** — YOLOv8n + ByteTrack for individual person tracking; CSRNet for high-density area estimation. Processes camera feeds to produce accurate, continuous crowd counts per zone.
-2. **Intelligence Layer** — Flask backend classifies live data into risk levels (Safe / Warning / Critical), logs alerts with timestamps, and exposes everything via a clean REST API.
-3. **Operator Layer** — Web dashboard presents live maps, alerts, analytics, thermal views, and exit-routing guidance — giving decision-makers the situational awareness they need in real time.
-
-### Design Philosophy
-
-CrowdShield is built to be **practical and deployable**, not just technically impressive:
-
-- Runs on **consumer-grade cameras** and standard hardware — no proprietary surveillance equipment required
-- Uses **YOLOv8n (nano)** optimized for CPU-only environments, so it works without expensive GPU infrastructure
-- **Frontend and backend are fully decoupled** — dashboard runs as a static site; AI engine runs independently wherever a camera feed is available
-- **Modular architecture** — detection engine, dashboard, and analytics can each be adopted or extended independently
-
-This makes CrowdShield viable not just for large commercial events, but for **community gatherings, religious sites, college fests, and local administrations** that need crowd safety tools without enterprise surveillance budgets.
+In every case, the crisis was **detectable minutes before it became fatal** — if the right system had been in place.
 
 ---
 
-## 🚀 Key Features
+## 🛡️ What CrowdShield Does
 
-| Feature | What It Does | Why It Matters |
-|---|---|---|
-| 🗺️ **Live Venue Map** | Zones color-coded in real time as Safe / Caution / Critical based on current occupancy | Single-glance venue status — enables faster prioritization during busy periods |
-| 🚨 **Real-Time Alert System** | Auto-raises alerts when density thresholds are crossed; filterable Active vs Resolved feed | Removes manual monitoring burden — flags problems as they emerge and tracks resolution |
-| 📊 **Crowd Analytics** | Density trends over time, flow paths, bottleneck highlighting via charts | Helps organizers understand patterns, not just snapshots — useful live and for post-event planning |
-| 🌡️ **Thermal Occupancy Monitor** | Renders zone occupancy as a heatmap with occupancy tables | Intuitive secondary view, especially useful when camera angles make direct counting difficult |
-| 🚪 **Exit Routing & Evacuation** | Live gate congestion status (Clear / Moderate / Congested) with step-by-step evacuation recommendations | Knowing which exits are usable *right now* directly reduces crush risk in emergencies |
-| 🎥 **YOLOv8 + ByteTrack Engine** | Detects individuals per frame; ByteTrack maintains consistent IDs across frames for reliable live counts | Core data source — accurate counts drive every alert, zone status, and analytic on the dashboard |
-| 📈 **CSRNet Density Estimation** | For overhead/aerial angles at high densities — generates a density heatmap and estimates headcount via VGG-16 dilated convolutions | Extends accurate estimation to scenarios where person-by-person bounding boxes break down |
-| 📋 **Post-Event Reporting** | Zone usage summaries, entry/exit patterns, historical comparisons | Supports retrospective analysis so organizers can plan safer layouts for future events |
+CrowdShield is a real-time crowd safety and intelligence platform for event organizers, venue operators, religious site authorities, and public safety teams. It combines three layers:
+
+```
+📷 Webcam / IP Camera Feed
+          │
+          ▼
+🤖 AI Detection Layer       YOLOv8n + ByteTrack  (individual tracking)
+   (CrowdShield-Ai/)   +   CSRNet               (high-density estimation)
+          │
+          ▼
+⚙️  Intelligence Layer      Flask API — risk classification, alert logging, live stream
+          │
+          ▼
+🖥️  Operator Dashboard      Live map · Alerts · Analytics · Evacuation routing
+```
+
+**What operators get in real time:**
+- Live crowd count with color-coded risk status (Safe / Warning / Critical)
+- Instant alerts the moment density crosses a configured threshold
+- Full alert history with timestamps and resolve tracking
+- Crowd flow analytics and bottleneck identification
+- Exit congestion tracking and evacuation route guidance
+- Runs on **standard webcams** and **CPU-only hardware** — no enterprise equipment required
 
 ---
 
 ## 🧰 Tech Stack
 
-```
-Frontend         : HTML5, CSS3, JavaScript
-Backend          : Python, Flask, Flask-CORS
-Computer Vision  : OpenCV, YOLOv8n (Ultralytics), ByteTrack (supervision), CSRNet (PyTorch)
-Infrastructure   : ngrok (local tunnel for live demos), static hosting for frontend
-```
+| Layer | Technology |
+|---|---|
+| Frontend | HTML5, CSS3, Vanilla JavaScript |
+| Backend | Python 3, Flask, Flask-CORS |
+| Object Detection | YOLOv8n (Ultralytics) |
+| Multi-Object Tracking | ByteTrack (via Supervision) |
+| Density Estimation | CSRNet (PyTorch + TorchVision, VGG-16 backbone) |
+| Video Processing | OpenCV |
+| Configuration | python-dotenv |
+| Tunneling (live demo) | ngrok |
 
 ---
 
@@ -86,21 +81,23 @@ Infrastructure   : ngrok (local tunnel for live demos), static hosting for front
 
 ```
 crowd-shield/
-├── index.html               # Landing page — overview, problem statement, incident timeline
-├── dashboard.html           # Operator dashboard — live map, alerts, analytics, reports
-├── dashboard.js             # Dashboard rendering logic and zone status handling
-├── ai-demo.html             # AI detection demo — live video feed with detection overlay
-├── event-entry.html         # Event access page for entering an event session
-├── detection_data.json      # Fallback crowd detection data (count, level, fps)
-├── styles.css               # Global stylesheet
-├── requirements.txt         # Root-level Python dependencies
+│
+├── index.html               # Landing page — problem statement, incident timeline
+├── dashboard.html           # Main operator dashboard
+├── dashboard.js             # Dashboard rendering and zone status logic
+├── ai-demo.html             # Live AI detection demo with video overlay
+├── event-entry.html         # Event session access page
+├── detection_data.json      # Fallback crowd detection data
+├── styles.css               # Global styles and responsive layout
+├── requirements.txt         # Python dependencies (root level)
+│
 └── CrowdShield-Ai/
-    ├── server.py            # Flask server — /video_feed, /api/crowd-data, /api/alerts
-    ├── detect.py            # YOLOv8n + ByteTrack detection and tracking engine
-    ├── csrnet.py            # CSRNet density estimation model
-    ├── alert_logger.py      # Alert logging, loading, and resolve support (alerts.json)
-    ├── zones.py             # Zone configuration (name, camera source, thresholds)
-    ├── test_classify.py     # Unit tests for risk classification logic
+    ├── server.py            # Flask server — all API endpoints
+    ├── detect.py            # YOLOv8 + ByteTrack detection engine
+    ├── csrnet.py            # CSRNet crowd density estimation model
+    ├── zones.py             # Zone configuration loader
+    ├── alert_logger.py      # Alert logging and resolve system
+    ├── test_classify.py     # Unit tests for risk classification
     └── .env.example         # Environment variable template
 ```
 
@@ -108,13 +105,13 @@ crowd-shield/
 
 ## ⚡ Quick Start
 
-**1. Clone the repository**
+### 1. Clone the repository
 ```bash
 git clone https://github.com/Kareena-Treesa-Thomas/crowd-shield.git
 cd crowd-shield
 ```
 
-**2. Set up the AI backend**
+### 2. Set up the AI backend
 ```bash
 cd CrowdShield-Ai
 python -m venv venv
@@ -123,86 +120,139 @@ pip install -r ../requirements.txt
 cp .env.example .env
 ```
 
-**3. Configure your zone**
+> YOLOv8n weights are downloaded automatically on first run — no manual download needed.
 
-Edit `.env`:
+### 3. Configure your zone (optional)
+Edit `CrowdShield-Ai/.env`:
 ```env
+ZONE_NAME=Main Gate
+CAMERA_SOURCE=0        # 0 = default webcam
 SAFE_LIMIT=10
 WARNING_LIMIT=20
-CAMERA_INDEX=0
-PORT=5050
 ```
 
-**4. Start the detection server**
+### 4. Start the detection server
 ```bash
 python server.py
 ```
 
-Server starts at `http://localhost:5050`
-
-> YOLOv8n model weights download automatically on first run — no manual setup required.
-
-**5. Open the interface**
-
-Open `dashboard.html` or `ai-demo.html` in your browser.
-
----
-
-## 🔌 API Reference
+Server starts at `http://localhost:5050`:
 
 | Endpoint | Method | Description |
 |---|---|---|
-| `/video_feed` | GET | MJPEG stream with bounding boxes and tracking IDs overlaid |
-| `/api/crowd-data` | GET | JSON — current count, risk level, FPS, timestamp |
-| `/api/health` | GET | Server status, zone name, device, model info |
-| `/api/alerts` | GET | All logged alerts with timestamps and resolve status |
-| `/api/alerts/<id>/resolve` | POST | Mark a specific alert as resolved |
-| `/stop` | GET | Gracefully stop the detection loop and release camera |
+| `/video_feed` | GET | Live MJPEG stream with detection overlay |
+| `/api/crowd-data` | GET | Current count, risk level, and FPS |
+| `/api/health` | GET | Server status, device, and model info |
+| `/api/alerts` | GET | Full alert history with timestamps |
+| `/api/alerts/<id>/resolve` | POST | Mark an alert as resolved |
 
-**Sample `/api/crowd-data` response:**
-```json
-{
-  "count": 14,
-  "level": "WARNING",
-  "fps": 18.3,
-  "timestamp": "2025-06-15T10:42:00.000Z"
-}
-```
+### 5. Open the dashboard
+Open `dashboard.html` or `ai-demo.html` in your browser. Auto-connects to the backend at `localhost:5050`; falls back to `detection_data.json` if no server is running.
 
 ---
 
-## 🎯 Risk Classification
+## 🚦 Risk Classification
 
 | Level | Count | Indicator | Action |
 |---|---|---|---|
-| SAFE | ≤ 10 | 🟢 | Normal occupancy — no action needed |
-| WARNING | 11 – 20 | 🟡 | Elevated density — monitor closely |
-| CRITICAL | > 20 | 🔴 | High risk — immediate intervention required |
+| **SAFE** | ≤ 10 | 🟢 Green | Normal — monitor as usual |
+| **WARNING** | 11–20 | 🟡 Yellow | Elevated — increase attention |
+| **CRITICAL** | > 20 | 🔴 Red | High risk — intervene immediately |
 
-Thresholds are configurable via `.env` to suit different venue sizes and zone layouts.
+Thresholds are fully configurable via `CrowdShield-Ai/.env` to suit any venue size or zone layout.
 
 ---
 
-## ⚙️ Performance
+## 🚀 Key Features
 
-| Setting | Detail |
-|---|---|
-| Model | YOLOv8n (nano) — fastest YOLO variant, accurate for person detection |
-| Input resolution | 640 × 480 |
-| Frame skipping | Odd frames processed; ByteTrack interpolates on skipped frames |
-| GPU acceleration | FP16 half-precision enabled automatically when CUDA is available |
-| CPU-only estimate | ~12–18 FPS on a mid-range laptop |
+### 🗺️ Live Venue Map
+Zone-by-zone color-coded status updated in real time from the live camera feed. Single-glance situational awareness across the entire venue.
+
+### 🚨 Real-Time Alert System
+Alerts fire automatically when density crosses its threshold and are logged with full timestamps. Active and Resolved alerts are tracked in a filterable feed — operators never lose context on what's been handled.
+
+### 📊 Crowd Analytics Dashboard
+Time-series density charts, crowd flow paths, and bottleneck heatmaps — useful for both live decisions and post-event planning.
+
+### 🌡️ Thermal Occupancy Monitor
+Heatmap view of zone occupancy, especially useful when camera angles make direct counting difficult.
+
+### 🚪 Exit Routing & Evacuation Guidance
+Real-time congestion status per exit (Clear / Moderate / Congested) with step-by-step evacuation recommendations. Knowing which exits are usable right now reduces crush risk.
+
+### 🎥 YOLOv8n + ByteTrack Detection Engine
+Per-frame person detection with persistent identity tracking across frames. Frame-skipping combined with ByteTrack interpolation maintains smooth, consistent tracking without processing every frame.
+
+### 📈 CSRNet Density Estimation
+For aerial or overhead angles where bounding-box detection becomes unreliable at high densities, CSRNet (VGG-16 dilated CNN) generates density heatmaps and accurate headcount estimates.
+
+### 📋 Post-Event Reporting
+Summary reports covering most-visited zones, entry/exit usage patterns, and historical alert logs for future event planning.
+
+---
+
+## ⚙️ Performance Optimizations
+
+- **YOLOv8n (nano)** — ~4× faster inference than YOLOv8m with minimal accuracy trade-off for person detection
+- **640×480 input resolution** — reduces per-frame compute without impacting detection quality
+- **Frame skipping (every 2nd frame)** — halves detection load; ByteTrack interpolation fills gaps seamlessly
+- **FP16 half-precision** — automatically enabled when a CUDA GPU is detected
+- **Threaded Flask server** — video capture and API responses run concurrently without blocking each other
+
+---
+
+## 🌐 Deployment
+
+### Frontend — Static Hosting
+The frontend is plain HTML/JS with no build step. Deploy to any static host (GitHub Pages, Netlify, etc.) by uploading the root-level HTML/JS/CSS files.
+
+### AI Backend — Local Machine with Camera
+
+```bash
+cd CrowdShield-Ai
+python server.py
+```
+
+### Exposing the Backend Publicly (for live demos)
+
+To make your local backend accessible from a public URL during a demo:
+
+```bash
+# Install ngrok from https://ngrok.com/download
+ngrok http 5050
+```
+
+ngrok will give you a public URL (e.g. `https://abc123.ngrok.io`). Update the API base URL in `dashboard.html` to point to that URL for the duration of the demo.
+
+The frontend and backend are **fully decoupled** — the dashboard works as a standalone static site with fallback data, and connects to the AI engine over any network.
+
+---
+
+## 🧪 Running Tests
+
+```bash
+cd CrowdShield-Ai
+python test_classify.py
+```
+
+Expected output:
+```
+All tests passed.
+```
 
 ---
 
 ## 👥 Team
 
+Built at **Muthoot Institute of Technology and Science (MITS), Kochi**
+Under the guidance of **Dr. Roy C.J.**
+
 | Name | Role |
 |---|---|
-| Kareena Treesa Thomas | Project Lead · AI & Backend |
-| Christy George | AI & Backend |
-| Anjana Priya V P | AI & YOLO Model |
-| Alan T Anoop | Frontend & Integration |
+| **Kareena Treesa Thomas** | Project Lead · AI Backend · Detection Pipeline |
+| **Christy George** | AI Backend · Flask Server · API Integration |
+| **Anjana Priya V P** | YOLOv8 Model Integration · Frontend Integration |
+| **Alan T Anoop** | Frontend Development · Dashboard & UI |
 
 ---
 
@@ -215,10 +265,12 @@ Thresholds are configurable via `.env` to suit different venue sizes and zone la
 
 ## 📜 License
 
-No license has been specified for this project. All rights reserved by the authors.
+No license specified. All rights reserved by the authors.
 
 ---
 
 <div align="center">
-Built to prevent the next Hillsborough. The next Astroworld. The next Hathras.
+
+*CrowdShield — built so that the next organized event isn't the next disaster.*
+
 </div>
