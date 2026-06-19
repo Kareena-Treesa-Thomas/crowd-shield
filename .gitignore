@@ -1,0 +1,26 @@
+﻿# Environment — never commit real credentials
+.env
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Model weights — too large for GitHub
+*.pt
+*.pth
+
+# Generated runtime data
+alerts.json
+
+# Editor
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

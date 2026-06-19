@@ -351,7 +351,7 @@ label_annotator = sv.LabelAnnotator(text_scale=<span class="num">0.5</span>)
         var simInterval = null;
 
         function startCamera() {
-            videoEl.src = 'http://localhost:5050/video_feed';
+            videoEl.src = 'https://native-amber-dramatic.ngrok-free.dev/video_feed';
             videoEl.style.display = 'block';
             placeholder.style.display = 'none';
             hud.style.display = 'flex';
@@ -388,7 +388,7 @@ label_annotator = sv.LabelAnnotator(text_scale=<span class="num">0.5</span>)
             hudTime.textContent = now.toLocaleTimeString('en-GB');
 
             // Fetch live data from the Python API Server
-            fetch('http://localhost:5050/api/crowd-data?t=' + now.getTime())
+            fetch('https://native-amber-dramatic.ngrok-free.dev/api/crowd-data?t=' + now.getTime())
                 .then(response => {
                     if (!response.ok) throw new Error("API not running or unreachable");
                     return response.json();
